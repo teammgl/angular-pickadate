@@ -207,15 +207,15 @@
             render();
           };
 
-          // Workaround to watch multiple properties. XXX use $scope.$watchGroup in angular 1.3
-          scope.$watch(function(){
-            return angular.toJson([scope.minDate, scope.maxDate, scope.disabledDates]);
-          }, function() {
+          function updateRanges() {
             minDate = dateUtils.parseDate(scope.minDate, format) || new Date(0);
             maxDate = dateUtils.parseDate(scope.maxDate, format) || new Date(99999999999999);
 
             $render();
-          });
+          }
+          // Workaround to watch multiple properties. XXX use $scope.$watchGroup in angular 1.3
+          scope.$watchGroup(['minDate', 'maxDate'], updateRanges);
+          scope.$watchCollection('disabledDates', updateRanges);
 
           // Insert datepicker into DOM
           if (wantsModal) {

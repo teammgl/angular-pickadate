@@ -9,7 +9,7 @@ var _ = require('lodash');
 var karma = require('karma').server;
 var karmaConf = require('./karma.conf');
 var jshint = require('gulp-jshint');
-var legacyVersions = ['1.2.21', '1.3.6'];
+var legacyVersions = ['1.3.6'];
 
 var karmaConfFor = function(version) {
   var conf = _.clone(karmaConf);
