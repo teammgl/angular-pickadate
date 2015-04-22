@@ -148,12 +148,13 @@
           minDate: '=',
           maxDate: '=',
           disabledDates: '=',
-          weekStartsOn: '=',
+          weekStartsOn: '='
         },
 
         link: function(scope, element, attrs, ngModel)  {
           var noExtraRows   = attrs.hasOwnProperty('noExtraRows'),
               allowMultiple = attrs.hasOwnProperty('multiple'),
+              invertDisabled = attrs.hasOwnProperty('invertDisabled'),
               weekStartsOn  = scope.weekStartsOn,
               selectedDates = [],
               wantsModal    = element[0] instanceof HTMLInputElement,
@@ -336,7 +337,11 @@
           }
 
           function isDateDisabled(date) {
-            return indexOf.call(scope.disabledDates || [], date) >= 0;
+            var p = indexOf.call(scope.disabledDates || [], date) >= 0;
+            if (invertDisabled) {
+              p = !p;
+            }
+            return p;
           }
 
           function toggleDate(date, dateArray) {
