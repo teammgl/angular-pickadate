@@ -290,14 +290,17 @@
               var classNames = [],
                   dateObj    = allDates[i],
                   date       = dateFilter(dateObj, format),
-                  isDisabled = isDateDisabled(date);
+                  isDisabled = isDateDisabled(date),
+                  outOfUserRange = isOutOfUserRange(dateObj),
+                  outOfCurrentMonth = isOutOfCurrentMonth(dateObj);
 
-              if (isOutOfRange(dateObj) || isDisabled) {
+              if (outOfUserRange || outOfCurrentMonth || isDisabled) {
                 classNames.push('pickadate-disabled');
               } else {
                 classNames.push('pickadate-enabled');
               }
 
+              if (outOfCurrentMonth) classNames.push('pickadate-outfocus');
               if (isDisabled)     classNames.push('pickadate-unavailable');
               if (date === today) classNames.push('pickadate-today');
 
@@ -332,8 +335,16 @@
             return resultArray;
           }
 
+          function isOutOfCurrentMonth(date) {
+            return dateFilter(date, 'M') !== dateFilter(scope.currentDate, 'M');
+          }
+
+          function isOutOfUserRange(date) {
+            return date < minDate || date > maxDate;
+          }
+
           function isOutOfRange(date) {
-            return date < minDate || date > maxDate || dateFilter(date, 'M') !== dateFilter(scope.currentDate, 'M');
+            return isOutOfUserRange(date) || isOutOfCurrentMonth(date);
           }
 
           function isDateDisabled(date) {
