@@ -148,12 +148,13 @@
           minDate: '=',
           maxDate: '=',
           disabledDates: '=',
-          weekStartsOn: '=',
+          weekStartsOn: '='
         },
 
         link: function(scope, element, attrs, ngModel)  {
           var noExtraRows   = attrs.hasOwnProperty('noExtraRows'),
               allowMultiple = attrs.hasOwnProperty('multiple'),
+              invertDisabled = attrs.hasOwnProperty('invertDisabled'),
               weekStartsOn  = scope.weekStartsOn,
               selectedDates = [],
               wantsModal    = element[0] instanceof HTMLInputElement,
@@ -207,15 +208,15 @@
             render();
           };
 
-          // Workaround to watch multiple properties. XXX use $scope.$watchGroup in angular 1.3
-          scope.$watch(function(){
-            return angular.toJson([scope.minDate, scope.maxDate, scope.disabledDates]);
-          }, function() {
+          function updateRanges() {
             minDate = dateUtils.parseDate(scope.minDate, format) || new Date(0);
             maxDate = dateUtils.parseDate(scope.maxDate, format) || new Date(99999999999999);
 
             $render();
-          });
+          }
+          // Workaround to watch multiple properties. XXX use $scope.$watchGroup in angular 1.3
+          scope.$watchGroup(['minDate', 'maxDate'], updateRanges);
+          scope.$watchCollection('disabledDates', updateRanges);
 
           // Insert datepicker into DOM
           if (wantsModal) {
@@ -289,14 +290,17 @@
               var classNames = [],
                   dateObj    = allDates[i],
                   date       = dateFilter(dateObj, format),
-                  isDisabled = isDateDisabled(date);
+                  isDisabled = isDateDisabled(date),
+                  outOfUserRange = isOutOfUserRange(dateObj),
+                  outOfCurrentMonth = isOutOfCurrentMonth(dateObj);
 
-              if (isOutOfRange(dateObj) || isDisabled) {
+              if (outOfUserRange || outOfCurrentMonth || isDisabled) {
                 classNames.push('pickadate-disabled');
               } else {
                 classNames.push('pickadate-enabled');
               }
 
+              if (outOfCurrentMonth) classNames.push('pickadate-outfocus');
               if (isDisabled)     classNames.push('pickadate-unavailable');
               if (date === today) classNames.push('pickadate-today');
 
@@ -331,12 +335,24 @@
             return resultArray;
           }
 
+          function isOutOfCurrentMonth(date) {
+            return dateFilter(date, 'M') !== dateFilter(scope.currentDate, 'M');
+          }
+
+          function isOutOfUserRange(date) {
+            return date < minDate || date > maxDate;
+          }
+
           function isOutOfRange(date) {
-            return date < minDate || date > maxDate || dateFilter(date, 'M') !== dateFilter(scope.currentDate, 'M');
+            return isOutOfUserRange(date) || isOutOfCurrentMonth(date);
           }
 
           function isDateDisabled(date) {
-            return indexOf.call(scope.disabledDates || [], date) >= 0;
+            var p = indexOf.call(scope.disabledDates || [], date) >= 0;
+            if (invertDisabled) {
+              p = !p;
+            }
+            return p;
           }
 
           function toggleDate(date, dateArray) {
