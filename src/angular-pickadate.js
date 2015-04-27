@@ -154,7 +154,7 @@
         link: function(scope, element, attrs, ngModel)  {
           var noExtraRows   = attrs.hasOwnProperty('noExtraRows'),
               allowMultiple = attrs.hasOwnProperty('multiple'),
-              invertDisabled = attrs.hasOwnProperty('invertDisabled'),
+              invertDisabled = attrs.hasOwnProperty('invertdisabled'),
               weekStartsOn  = scope.weekStartsOn,
               selectedDates = [],
               wantsModal    = element[0] instanceof HTMLInputElement,
