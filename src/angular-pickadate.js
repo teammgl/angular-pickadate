@@ -148,18 +148,19 @@
           minDate: '=',
           maxDate: '=',
           disabledDates: '=',
-          weekStartsOn: '='
+          weekStartsOn: '=',
+          onChangeMonth: '&'
         },
 
         link: function(scope, element, attrs, ngModel)  {
-          var noExtraRows   = attrs.hasOwnProperty('noExtraRows'),
-              allowMultiple = attrs.hasOwnProperty('multiple'),
+          var noExtraRows    = attrs.hasOwnProperty('noExtraRows'),
+              allowMultiple  = attrs.hasOwnProperty('multiple'),
               invertDisabled = attrs.hasOwnProperty('invertdisabled'),
-              weekStartsOn  = scope.weekStartsOn,
-              selectedDates = [],
-              wantsModal    = element[0] instanceof HTMLInputElement,
-              compiledHtml  = $compile(TEMPLATE)(scope),
-              format        = (attrs.format || 'yyyy-MM-dd').replace(/m/g, 'M'),
+              weekStartsOn   = scope.weekStartsOn,
+              selectedDates  = [],
+              wantsModal     = element[0] instanceof HTMLInputElement,
+              compiledHtml   = $compile(TEMPLATE)(scope),
+              format         = (attrs.format || 'yyyy-MM-dd').replace(/m/g, 'M'),
               minDate, maxDate;
 
           scope.displayPicker = !wantsModal;
@@ -206,6 +207,9 @@
             scope.currentDate.setDate(1);
             scope.currentDate.setMonth(scope.currentDate.getMonth() + offset);
             render();
+            if (scope.onChangeMonth) {
+              scope.onChangeMonth({newMonth: scope.currentDate});
+            }
           };
 
           function updateRanges() {
