@@ -185,8 +185,10 @@
               selectedDates = [ngModel.$viewValue];
             }
 
-            scope.currentDate = dateUtils.parseDate(scope.defaultDate, format) ||
-              dateUtils.parseDate(selectedDates[0], format) || new Date();
+            if (!options.skipUpdateDate) {
+              scope.currentDate = dateUtils.parseDate(scope.defaultDate, format) ||
+                dateUtils.parseDate(selectedDates[0], format) || new Date();
+            }
 
             selectedDates = enabledDatesOf(selectedDates);
 
@@ -216,7 +218,7 @@
             minDate = dateUtils.parseDate(scope.minDate, format) || new Date(0);
             maxDate = dateUtils.parseDate(scope.maxDate, format) || new Date(99999999999999);
 
-            $render();
+            $render({skipUpdateDate: true});
           }
           // Workaround to watch multiple properties. XXX use $scope.$watchGroup in angular 1.3
           scope.$watchGroup(['minDate', 'maxDate'], updateRanges);
