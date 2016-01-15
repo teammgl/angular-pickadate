@@ -76,6 +76,19 @@ function MyAppController($scope) {
 }
 ```
 
+#### disabled-weekdays
+
+Allows you to disable specific days of the week.
+
+```html
+<div pickadate ng-model="date" disabled-weekdays="disabledWeekdays"></div>
+```
+
+```javascript
+function MyAppController($scope) {
+    $scope.disabledWeekdays = ['Saturday', 'Sunday'];
+}
+
 #### default-date
 
 Allows you to preset the calendar to a particular month without setting the chosen date.

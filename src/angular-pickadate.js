@@ -148,6 +148,7 @@
           minDate: '=',
           maxDate: '=',
           disabledDates: '=',
+          disabledWeekdays: '=',
           weekStartsOn: '=',
           onChangeMonth: '&'
         },
@@ -164,6 +165,7 @@
               minDate, maxDate;
 
           scope.displayPicker = !wantsModal;
+          scope.weekdays = $locale.DATETIME_FORMATS.DAY;
 
           if (!angular.isNumber(weekStartsOn) || weekStartsOn < 0 || weekStartsOn > 6) {
             weekStartsOn = 0;
@@ -223,6 +225,7 @@
           // Workaround to watch multiple properties. XXX use $scope.$watchGroup in angular 1.3
           scope.$watchGroup(['minDate', 'maxDate'], updateRanges);
           scope.$watchCollection('disabledDates', updateRanges);
+          scope.$watchCollection('disabledWeekdays', updateRanges);
 
           // Insert datepicker into DOM
           if (wantsModal) {
@@ -354,6 +357,11 @@
           }
 
           function isDateDisabled(date) {
+            //Skip any checking if the day (Monday, Tuesday, etc.) is marked as disabled
+            if(indexOf.call(scope.disabledWeekdays || [], scope.weekdays[new Date(date).getDay()]) >= 0) {
+              return -1;
+            }
+
             var p = indexOf.call(scope.disabledDates || [], date) >= 0;
             if (invertDisabled) {
               p = !p;
