@@ -88,6 +88,7 @@ Allows you to disable specific days of the week.
 function MyAppController($scope) {
     $scope.disabledWeekdays = ['Saturday', 'Sunday'];
 }
+```
 
 #### default-date
 

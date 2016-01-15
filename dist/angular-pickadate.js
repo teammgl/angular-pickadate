@@ -165,7 +165,7 @@
               minDate, maxDate;
 
           scope.displayPicker = !wantsModal;
-          scope.weekdays = $locale.DATETIME_FORMATS.DAY;
+          scope.weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
           if (!angular.isNumber(weekStartsOn) || weekStartsOn < 0 || weekStartsOn > 6) {
             weekStartsOn = 0;
@@ -358,7 +358,7 @@
 
           function isDateDisabled(date) {
             //Skip any checking if the day (Monday, Tuesday, etc.) is marked as disabled
-            if(indexOf.call(scope.disabledWeekdays || [], scope.weekdays[new Date(date).getDay()]) >= 0) {
+            if(indexOf.call(scope.disabledWeekdays || [], scope.weekdays[new Date(date).getUTCDay()]) >= 0) {
               return -1;
             }
 
