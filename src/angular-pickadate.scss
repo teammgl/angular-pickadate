@@ -100,3 +100,14 @@
   padding: 0 5px 5px 5px;
   z-index: 1000;
 }
+
+.pickadate .pickadate-header .pickadate-controls button {
+  background-color: transparent;
+  border: none;
+  padding: 1em 2em;
+  width: auto;
+  &[disabled] {
+    cursor: default;
+    pointer-events: none;
+  }
+}
